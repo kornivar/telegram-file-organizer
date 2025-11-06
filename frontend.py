@@ -58,3 +58,8 @@ class GUIView:
             "Result",
             f"Files moved: {result['moved']}, missed: {result['skipped']}"
         )
+
+
+
+    def run(self):
+        self.root.mainloop()
