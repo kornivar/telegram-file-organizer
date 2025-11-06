@@ -51,3 +51,10 @@ class GUIView:
         
     def show_message(self, message):
         messagebox.showinfo("Information", message)
+
+
+    def show_result(self, result):
+        messagebox.showinfo(
+            "Result",
+            f"Files moved: {result['moved']}, missed: {result['skipped']}"
+        )
