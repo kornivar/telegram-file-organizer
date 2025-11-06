@@ -46,3 +46,8 @@ class GUIView:
             messagebox.showwarning("Error", "Select folder!")
             return
         self.controller.sort_files(self.selected_path)
+
+
+        
+    def show_message(self, message):
+        messagebox.showinfo("Information", message)
