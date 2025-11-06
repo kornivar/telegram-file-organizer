@@ -39,3 +39,10 @@ class GUIView:
         if path:
             self.selected_path = path
             self.path_label.config(text=f"Folder: {path}")
+
+
+    def sort_files(self):
+        if not self.selected_path:
+            messagebox.showwarning("Error", "Select folder!")
+            return
+        self.controller.sort_files(self.selected_path)
