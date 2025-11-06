@@ -32,3 +32,10 @@ class GUIView:
         self.path_label.pack(pady=5)
 
         self.selected_path = None
+
+
+    def choose_folder(self):
+        path = filedialog.askdirectory()
+        if path:
+            self.selected_path = path
+            self.path_label.config(text=f"Folder: {path}")
