@@ -32,3 +32,34 @@ class GUIView:
         self.path_label.pack(pady=5)
 
         self.selected_path = None
+
+
+    def choose_folder(self):
+        path = filedialog.askdirectory()
+        if path:
+            self.selected_path = path
+            self.path_label.config(text=f"Folder: {path}")
+
+
+    def sort_files(self):
+        if not self.selected_path:
+            messagebox.showwarning("Error", "Select folder!")
+            return
+        self.controller.sort_files(self.selected_path)
+
+
+        
+    def show_message(self, message):
+        messagebox.showinfo("Information", message)
+
+
+    def show_result(self, result):
+        messagebox.showinfo(
+            "Result",
+            f"Files moved: {result['moved']}, missed: {result['skipped']}"
+        )
+
+
+
+    def run(self):
+        self.root.mainloop()
