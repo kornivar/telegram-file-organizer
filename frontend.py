@@ -1,24 +1,18 @@
 import tkinter as tk
 from tkinter import filedialog, messagebox
 
-class CLIView:
-    
-    """Console view."""
-
-    def get_directory(self):
+class ConsoleView:
+    def ask_directory(self):
         return input("Enter the path to the Telegram folder: ")
 
     def show_message(self, message):
         print(f"[INFO] {message}")
 
     def show_result(self, result):
-        print(f"Files moved: {result['moved']}, missed: {result['skipped']}")
+        print(f"Files moved: {result.get('moved', 0)}, missed: {result.get('skipped', 0)}")
 
 
 class GUIView:
-
-    """Graphical representation with Tkinter."""
-
     def __init__(self, controller):
         self.controller = controller
         self.root = tk.Tk()
@@ -45,6 +39,7 @@ class GUIView:
         if not self.selected_path:
             messagebox.showwarning("Error", "Select folder!")
             return
+        # controller will call view.show_result/show_message
         self.controller.sort_files(self.selected_path)
 
 
@@ -59,7 +54,36 @@ class GUIView:
             f"Files moved: {result['moved']}, missed: {result['skipped']}"
         )
 
-
-
     def run(self):
         self.root.mainloop()
+
+
+if __name__ == "__main__":
+    """
+    Entry point when running `frontend.py` directly.
+
+    Usage:
+      python frontend.py            -> tries GUI, falls back to console on error
+      python frontend.py gui|g      -> force GUI
+      python frontend.py console|c  -> force console
+    """
+    import sys
+
+    arg = sys.argv[1].lower() if len(sys.argv) > 1 else None
+
+    # Import controller inside the guard to avoid circular import problems at module import time.
+    try:
+        from controller import FileController
+    except Exception as e:
+        print(f"[ERROR] Cannot import controller: {e}")
+        raise
+
+    if arg in ("console", "c"):
+        FileController(view_type="console").run()
+    else:
+        # default: try GUI, fall back to console if GUI initialization fails
+        try:
+            FileController(view_type="gui").run()
+        except Exception as e:
+            print(f"[WARN] GUI failed ({e}), falling back to console mode.")
+            FileController(view_type="console").run()

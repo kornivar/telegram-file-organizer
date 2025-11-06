@@ -1,7 +1,7 @@
 import shutil
 from pathlib import Path
 from model import FileModel
-from view import ConsoleView, GUIView
+from frontend import ConsoleView, GUIView
 
 class FileController:
     def __init__(self, view_type="console"):
@@ -19,63 +19,51 @@ class FileController:
         model = FileModel(path)
         files = model.get_files()
 
-        #  Not found or is not a directory.
+        # Model returned an error message.
         if isinstance(files, str):
-            # The model returned an error message.
-            if self.view_type == "console":
-                self.view.show_message(files)
-            else:
-                self.view.show_message(files)
+            self.view.show_message(files)
             return files
 
-        else:
-            # If the list is empty
-            if not files:
-                msg = f"In the folder '{path}' There are no files to sort."
-                if self.view_type == "console":
-                    self.view.show_message(msg)
-                else:
-                    self.view.show_message(msg)
-                return msg
+        # Empty list
+        if not files:
+            msg = f"In the folder '{path}' There are no files to sort."
+            self.view.show_message(msg)
+            return msg
+
+        moved = 0
+        skipped = 0
+
+        # Sorting and moving files
+        for file in files:
+            ext = file.suffix.lower()
+
+            if ext in ['.jpg', '.png', '.jpeg']:
+                target_dir = Path(path) / "Images"
+            elif ext in ['.mp4', '.avi', '.mov']:
+                target_dir = Path(path) / "Videos"
+            elif ext in ['.pdf', '.docx', '.txt']:
+                target_dir = Path(path) / "Documents"
             else:
-                # Sorting and moving files
-                for file in files:
-                    ext = file.suffix.lower()
+                target_dir = Path(path) / "Others"
 
-                    if ext in ['.jpg', '.png', '.jpeg']:
-                        target_dir = Path(path) / "Images"
-                    elif ext in ['.mp4', '.avi', '.mov']:
-                        target_dir = Path(path) / "Videos"
-                    elif ext in ['.pdf', '.docx', '.txt']:
-                        target_dir = Path(path) / "Documents"
-                    else:
-                        target_dir = Path(path) / "Others"
+            target_dir.mkdir(exist_ok=True)
 
-                    target_dir.mkdir(exist_ok=True)
+            try:
+                shutil.move(str(file), str(target_dir / file.name))
+                moved += 1
+            except Exception as e:
+                skipped += 1
+                self.view.show_message(f"Error moving {file.name}: {e}")
+                continue
 
-                    # Attempt to move file
-                    try:
-                        shutil.move(str(file), str(target_dir / file.name))
-                    except Exception as e:
-                        error_message = f"Error during movement {file.name}: {e}"
-                        if self.view_type == "console":
-                            self.view.show_message(error_message)
-                        else:
-                            self.view.show_message(error_message)
-                        return error_message
-
-                success_message = f"Files from '{path}' Successfully sorted!"
-                if self.view_type == "console":
-                    self.view.show_message(success_message)
-                else:
-                    self.view.show_message(success_message)
-                return success_message
+        result = {'moved': moved, 'skipped': skipped}
+        self.view.show_result(result)
+        return result
 
     def run(self):
         if self.view_type == "console":
             path = self.view.ask_directory()
-            result = self.sort_files(path)
-            return result
+            return self.sort_files(path)
         else:
             self.view.run()
             return None
