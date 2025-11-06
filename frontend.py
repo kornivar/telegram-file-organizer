@@ -13,3 +13,22 @@ class CLIView:
 
     def show_result(self, result):
         print(f"Files moved: {result['moved']}, missed: {result['skipped']}")
+
+
+class GUIView:
+
+    """Graphical representation with Tkinter."""
+
+    def __init__(self, controller):
+        self.controller = controller
+        self.root = tk.Tk()
+        self.root.title("Telegram File Sorter")
+
+        tk.Label(self.root, text="Select the Telegram folder").pack(pady=10)
+        tk.Button(self.root, text="Select folder", command=self.choose_folder).pack(pady=5)
+        tk.Button(self.root, text="Sort", command=self.sort_files).pack(pady=5)
+
+        self.path_label = tk.Label(self.root, text="")
+        self.path_label.pack(pady=5)
+
+        self.selected_path = None
