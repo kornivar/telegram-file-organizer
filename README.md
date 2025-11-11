@@ -1,23 +1,23 @@
 # Telegram File Organizer
 
-## Описание  
-Программа предназначена для анализа указанной папки и автоматической сортировки всех файлов по подпапкам в зависимости от их типа.  
-Доступны две версии приложения: консольная и графическая (GUI). Обе версии реализованы с использованием паттерна MVC.
+## Description  
+The program is designed to analyze the specified folder and automatically sort all files into subfolders depending on their type.  
+Two versions of the application are available: console and graphical (GUI). Both versions are implemented using the MVC pattern.
 
-## Возможности  
-- Анализ содержимого выбранной папки Telegram  
-- Автоматическое распределение файлов по категориям:
-  - Изображения (.jpg, .png, .gif)
-  - Видео (.mp4, .avi, .mov)
-  - Документы (.pdf, .docx, .txt)
-  - Музыка (.mp3, .wav)
+## Features  
+- Analysis of the contents of the selected Telegram folder  
+- Automatic distribution of files by category:
+  - Images (.jpg, .png, .gif)
+  - Videos (.mp4, .avi, .mov)
+  - Documents (.pdf, .docx, .txt)
+  - Music (.mp3, .wav)
  
-## Структура репозитория  
-Проект разделён на две основные ветки:
+## Repository structure  
+The project is divided into two main branches:
 - **frontend**
 - **backend**
 
-## Архитектура (MVC)  
+## Architecture (MVC)  
 - Model
-- View 
+- View
 - Controller
